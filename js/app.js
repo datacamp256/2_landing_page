@@ -45,9 +45,12 @@
 /**
  * End Main Functions
  * Begin Events
- * 
-*/
-
+ *
+ */
+document.addEventListener('DOMContentLoaded', function () {
+    console.log("now begin the script");
+});
+console.log("not yet finished")
 // Build menu 
 
 // Scroll to section on link click
