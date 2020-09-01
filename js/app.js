@@ -1,22 +1,24 @@
 /**
- * 
+ *
  * Manipulating the DOM exercise.
  * Exercise programmatically builds navigation,
  * scrolls to anchors from navigation,
  * and highlights section in viewport upon scrolling.
- * 
+ *
  * Dependencies: None
- * 
+ *
  * JS Version: ES2015/ES6
- * 
+ *
  * JS Standard: ESlint
- * 
-*/
+ *
+ */
+'use strict';
+module.exports = createNavigationMenu;
 
 /**
  * Define Global Variables
- * 
-*/
+ *
+ */
 
 
 /**
@@ -24,20 +26,19 @@
  * Start Helper Functions
  * 
 */
-function sum(a, b) {
-    return a + b;
-}
-module.exports = sum;
-
 
 /**
  * End Helper Functions
  * Begin Main Functions
- * 
-*/
+ *
+ */
 
 // build the nav
-
+function createNavigationMenu() {
+    const navbarList = document.getElementById('navbar__list');
+    const listElement = document.createElement('li');
+    navbarList.appendChild(listElement)
+}
 
 // Add class 'active' to section when near top of viewport
 
@@ -50,11 +51,11 @@ module.exports = sum;
  * Begin Events
  *
  */
+
+// Build menu
 document.addEventListener('DOMContentLoaded', function () {
-    console.log("now begin the script");
+    createNavigationMenu();
 });
-console.log("not yet finished")
-// Build menu 
 
 // Scroll to section on link click
 
