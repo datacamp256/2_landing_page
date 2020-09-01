@@ -1,0 +1,23 @@
+{
+  "name": "2_landing_page",
+  "version": "0.0.1",
+  "description": "This project requires you to build a multi-section landing page, with a dynamically updating navigational menu based on the amount of content that is added to the page.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/datacamp256/2_landing_page.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/datacamp256/2_landing_page/issues"
+  },
+  "homepage": "https://github.com/datacamp256/2_landing_page#readme",
+  "devDependencies": {
+    "jest": "^26.4.2"
+  }
+}
