@@ -29,7 +29,9 @@ function findSections() {
     const navbarList = document.querySelectorAll('main section');
     const sectionNames = [];
     navbarList.forEach((entry) => {
-        sectionNames.push(entry.getAttribute('data-nav'));
+        if (entry.hasAttribute('data-nav')) {
+            sectionNames.push(entry.getAttribute('data-nav'));
+        }
     });
     return sectionNames;
 }

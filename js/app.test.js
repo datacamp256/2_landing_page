@@ -6,11 +6,8 @@ const emptyNavBar = `<header class="page__header">
   </header>`;
 
 
-const threeSections = `<main>
-    <header class="main__hero">
-      <h1>Landing Page </h1>
-    </header>
-    <section id="section1" data-nav="::data-nav 1::" class="your-active-class">
+const someSections =
+    `<section id="section1" data-nav="::data-nav 1::">
       <div class="landing__container">
         <h2>Section 1</h2>
         <p>Content of Section 1.</p>
@@ -27,15 +24,30 @@ const threeSections = `<main>
         <h2>Section 3</h2>
          <p>Content of Section 3.</p>
       </div>
+    </section>`;
+
+function createMainSection(content) {
+    return `<main>
+    <header class="main__hero">
+      <h1>Landing Page </h1>
+    </header>${content}</main>`;
+}
+
+const sectionWithoutDataNav = `
+    <section id="invisible-section">
+      <div class="landing__container">
+        <h2>Invisible section</h2>
+         <p>This section should not appear.</p>
+         </div>
     </section>
-  </main>`;
+   `;
 
 describe('Navigation Bar', () => {
     beforeEach(() => {
         require('./app');
     });
     test('Fill a navigation bar with List Items', () => {
-        document.body.innerHTML = emptyNavBar + threeSections;
+        document.body.innerHTML = emptyNavBar + createMainSection(someSections);
 
         document.dispatchEvent(new Event('DOMContentLoaded', {bubbles: true, canceable: true}));
 
@@ -52,5 +64,13 @@ describe('Navigation Bar', () => {
             expect(value.textContent).toEqual(expectedListItems[index].name);
             expect(value.classList).toContain('menu__link');
         });
-    })
+    });
+    test('Ignore section elements without data-nav', () => {
+        document.body.innerHTML = emptyNavBar + createMainSection(someSections + sectionWithoutDataNav);
+
+        document.dispatchEvent(new Event('DOMContentLoaded', {bubbles: true, canceable: true}));
+
+        const navbarList = document.getElementById('navbar__list');
+        expect(navbarList.children).toHaveLength(3);
+    });
 });
