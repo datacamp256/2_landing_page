@@ -41,5 +41,15 @@ describe('Navigation Bar', () => {
 
         const navbarList = document.getElementById('navbar__list');
         expect(navbarList.children).toHaveLength(3);
+        expectedListItems = [
+            {name: 'one'},
+            {name: 'two'},
+            {name: 'three'}
+        ];
+        Array.from(navbarList.children).forEach((value, index) => {
+            expect(value).not.toBeNull();
+            expect(value.tagName).toEqual('LI');
+            expect(value.textContent).toEqual(expectedListItems[index].name);
+        });
     })
 });

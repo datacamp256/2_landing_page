@@ -38,8 +38,10 @@ function findSections() {
 // build the nav
 function createNavigationMenu() {
     const navbarList = document.getElementById('navbar__list');
-    findSections().forEach(() => {
+    findSections().forEach((name) => {
         const listElement = document.createElement('li');
+        const textContent = document.createTextNode(name);
+        listElement.appendChild(textContent)
         navbarList.appendChild(listElement);
     });
 }
