@@ -26,14 +26,17 @@
  */
 
 function findSections() {
-    const navbarList = document.querySelectorAll('main section');
-    const sectionNames = [];
-    navbarList.forEach((entry) => {
+    const sections = document.querySelectorAll('main section');
+    const sectionProperties = [];
+    sections.forEach((entry) => {
         if (entry.hasAttribute('data-nav')) {
-            sectionNames.push(entry.getAttribute('data-nav'));
+            sectionProperties.push({
+                name: entry.getAttribute('data-nav'),
+                target: entry.id
+            });
         }
     });
-    return sectionNames;
+    return sectionProperties;
 }
 
 /**
@@ -45,10 +48,12 @@ function findSections() {
 // build the nav
 function createNavigationMenu() {
     const navbarList = document.getElementById('navbar__list');
-    findSections().forEach((name) => {
+    findSections().forEach((entry) => {
+        const hyperLink = document.createElement('a');
+        hyperLink.textContent = entry.name;
+        hyperLink.setAttribute('href', '#' + entry.target);
         const listElement = document.createElement('li');
-        const textContent = document.createTextNode(name);
-        listElement.appendChild(textContent);
+        listElement.appendChild(hyperLink)
         listElement.classList.add('menu__link');
         navbarList.appendChild(listElement);
     });

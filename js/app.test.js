@@ -7,19 +7,19 @@ const emptyNavBar = `<header class="page__header">
 
 
 const someSections =
-    `<section id="section1" data-nav="::data-nav 1::">
+    `<section id="test-anchor1" data-nav="::data-nav 1::">
       <div class="landing__container">
         <h2>Section 1</h2>
         <p>Content of Section 1.</p>
       </div>
     </section>
-    <section id="section2" data-nav="::data-nav 2::">
+    <section id="test-anchor2" data-nav="::data-nav 2::">
       <div class="landing__container">
         <h2>Section 2</h2>
          <p>Content of Section 2.</p>
          </div>
     </section>
-    <section id="section3" data-nav="::data-nav 3::">
+    <section id="test-anchor3" data-nav="::data-nav 3::">
       <div class="landing__container">
         <h2>Section 3</h2>
          <p>Content of Section 3.</p>
@@ -54,15 +54,18 @@ describe('Navigation Bar', () => {
         const navbarList = document.getElementById('navbar__list');
         expect(navbarList.children).toHaveLength(3);
         expectedListItems = [
-            {name: '::data-nav 1::'},
-            {name: '::data-nav 2::'},
-            {name: '::data-nav 3::'},
+            {name: '::data-nav 1::', href: '#test-anchor1'},
+            {name: '::data-nav 2::', href: '#test-anchor2'},
+            {name: '::data-nav 3::', href: '#test-anchor3'},
         ];
         Array.from(navbarList.children).forEach((value, index) => {
             expect(value).not.toBeNull();
             expect(value.tagName).toEqual('LI');
             expect(value.textContent).toEqual(expectedListItems[index].name);
             expect(value.classList).toContain('menu__link');
+            const links = value.querySelectorAll('a');
+            expect(links).toHaveLength(1);
+            expect(links[0].href).toEqual('http://localhost/' + expectedListItems[index].href);
         });
     });
     test('Ignore section elements without data-nav', () => {
