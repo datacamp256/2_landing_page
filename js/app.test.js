@@ -50,6 +50,7 @@ describe('Navigation Bar', () => {
             expect(value).not.toBeNull();
             expect(value.tagName).toEqual('LI');
             expect(value.textContent).toEqual(expectedListItems[index].name);
+            expect(value.classList).toContain('menu__link');
         });
     })
 });

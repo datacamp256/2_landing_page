@@ -41,7 +41,8 @@ function createNavigationMenu() {
     findSections().forEach((name) => {
         const listElement = document.createElement('li');
         const textContent = document.createTextNode(name);
-        listElement.appendChild(textContent)
+        listElement.appendChild(textContent);
+        listElement.classList.add('menu__link');
         navbarList.appendChild(listElement);
     });
 }
