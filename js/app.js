@@ -17,7 +17,9 @@
  * Define Global Variables
  *
  */
-
+const NAVIGATION_NAME_ATTRIBUTE = 'data-nav';
+const NAVBAR_LIST_IDENTIFIER = 'navbar__list';
+const LIST_ITEM_CLASS = 'menu__link';
 
 /**
  * End Global Variables
@@ -25,17 +27,23 @@
  *
  */
 
+function extractEntryValues(entry) {
+    return {
+        name: entry.getAttribute(NAVIGATION_NAME_ATTRIBUTE),
+        target: entry.id
+    };
+}
+
 function findSections() {
     const sections = document.querySelectorAll('main section');
+
     const sectionProperties = [];
     sections.forEach((entry) => {
-        if (entry.hasAttribute('data-nav')) {
-            sectionProperties.push({
-                name: entry.getAttribute('data-nav'),
-                target: entry.id
-            });
+        let entryValues = extractEntryValues(entry);
+        if (entryValues.name != null) {
+            sectionProperties.push(entryValues);
         }
-    });
+    })
     return sectionProperties;
 }
 
@@ -47,14 +55,14 @@ function findSections() {
 
 // build the nav
 function createNavigationMenu() {
-    const navbarList = document.getElementById('navbar__list');
+    const navbarList = document.getElementById(NAVBAR_LIST_IDENTIFIER);
     findSections().forEach((entry) => {
         const hyperLink = document.createElement('a');
         hyperLink.textContent = entry.name;
         hyperLink.setAttribute('href', '#' + entry.target);
         const listElement = document.createElement('li');
         listElement.appendChild(hyperLink)
-        listElement.classList.add('menu__link');
+        listElement.classList.add(LIST_ITEM_CLASS);
         navbarList.appendChild(listElement);
     });
 }
