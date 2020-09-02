@@ -26,7 +26,12 @@
  */
 
 function findSections() {
-    return ['one', 'two', 'three'];
+    const navbarList = document.querySelectorAll('main section');
+    const sectionNames = [];
+    navbarList.forEach((entry) => {
+        sectionNames.push(entry.getAttribute('data-nav'));
+    });
+    return sectionNames;
 }
 
 /**

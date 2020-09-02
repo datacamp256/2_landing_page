@@ -10,19 +10,19 @@ const threeSections = `<main>
     <header class="main__hero">
       <h1>Landing Page </h1>
     </header>
-    <section id="section1" data-nav="Section 1" class="your-active-class">
+    <section id="section1" data-nav="::data-nav 1::" class="your-active-class">
       <div class="landing__container">
         <h2>Section 1</h2>
         <p>Content of Section 1.</p>
       </div>
     </section>
-    <section id="section2" data-nav="Section 2">
+    <section id="section2" data-nav="::data-nav 2::">
       <div class="landing__container">
         <h2>Section 2</h2>
          <p>Content of Section 2.</p>
          </div>
     </section>
-    <section id="section3" data-nav="Section 3">
+    <section id="section3" data-nav="::data-nav 3::">
       <div class="landing__container">
         <h2>Section 3</h2>
          <p>Content of Section 3.</p>
@@ -42,9 +42,9 @@ describe('Navigation Bar', () => {
         const navbarList = document.getElementById('navbar__list');
         expect(navbarList.children).toHaveLength(3);
         expectedListItems = [
-            {name: 'one'},
-            {name: 'two'},
-            {name: 'three'}
+            {name: '::data-nav 1::'},
+            {name: '::data-nav 2::'},
+            {name: '::data-nav 3::'},
         ];
         Array.from(navbarList.children).forEach((value, index) => {
             expect(value).not.toBeNull();
