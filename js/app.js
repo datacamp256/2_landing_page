@@ -12,8 +12,6 @@
  * JS Standard: ESlint
  *
  */
-'use strict';
-module.exports = createNavigationMenu;
 
 /**
  * Define Global Variables
