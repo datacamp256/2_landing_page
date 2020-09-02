@@ -22,8 +22,12 @@
 /**
  * End Global Variables
  * Start Helper Functions
- * 
-*/
+ *
+ */
+
+function findSections() {
+    return ['one', 'two', 'three'];
+}
 
 /**
  * End Helper Functions
@@ -34,8 +38,10 @@
 // build the nav
 function createNavigationMenu() {
     const navbarList = document.getElementById('navbar__list');
-    const listElement = document.createElement('li');
-    navbarList.appendChild(listElement)
+    findSections().forEach(() => {
+        const listElement = document.createElement('li');
+        navbarList.appendChild(listElement);
+    });
 }
 
 // Add class 'active' to section when near top of viewport
