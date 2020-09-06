@@ -20,6 +20,11 @@
 const NAVIGATION_NAME_ATTRIBUTE = 'data-nav';
 const NAVBAR_LIST_IDENTIFIER = 'navbar__list';
 const LIST_ITEM_CLASS = 'menu__link';
+const ACTIVE_SECTION_CLASS = 'your-active-class';
+const PAGE_HEADER_CLASS = 'page__header';
+let visibleTop;
+let sections;
+let activeSection;
 
 /**
  * End Global Variables
@@ -35,8 +40,6 @@ function extractEntryValues(entry) {
 }
 
 function findSections() {
-    const sections = document.querySelectorAll('main section');
-
     const sectionProperties = [];
     sections.forEach((entry) => {
         let entryValues = extractEntryValues(entry);
@@ -47,6 +50,14 @@ function findSections() {
     return sectionProperties;
 }
 
+function headerIsVisible(section, windowHeight, visibleTopEdgeBelow) {
+    var rect = section
+        .querySelector('h2')
+        .getBoundingClientRect();
+    return (rect.top >= visibleTopEdgeBelow &&
+        rect.bottom <= windowHeight);
+}
+
 /**
  * End Helper Functions
  * Begin Main Functions
@@ -54,6 +65,12 @@ function findSections() {
  */
 
 // build the nav
+
+function queryForSections() {
+    sections = document.querySelectorAll('main section');
+    activeSection = document.querySelector('.' + ACTIVE_SECTION_CLASS);
+}
+
 function createNavigationMenu() {
     const navbarList = document.getElementById(NAVBAR_LIST_IDENTIFIER);
     findSections().forEach((entry) => {
@@ -69,6 +86,29 @@ function createNavigationMenu() {
 
 // Add class 'active' to section when near top of viewport
 
+function activateSection() {
+    if (parseInt(document.querySelector('main').getBoundingClientRect().top) % 10 === 0) {
+        windowHeight = window.innerHeight !== 0 ? window.innerHeight : document.documentElement.clientHeight;
+        visibleTopEdgeBelow = document.querySelector('.' + PAGE_HEADER_CLASS).offsetHeight;
+        visibleSectionHeaders = [];
+
+        sections.forEach((section) => {
+            if (headerIsVisible(section, windowHeight, visibleTopEdgeBelow)) {//TODO not visible but near top of viewport
+                visibleSectionHeaders.push(section);
+            }
+        });
+
+        if (!visibleSectionHeaders.includes(activeSection) && visibleSectionHeaders.length > 0) {
+            activeSection.classList.remove(ACTIVE_SECTION_CLASS);
+            visibleSectionHeaders[0].classList.add(ACTIVE_SECTION_CLASS);
+            activeSection = visibleSectionHeaders[0];
+        }
+    }
+}
+
+function activateNavigationItem() {
+
+}
 
 // Scroll to anchor ID using scrollTO event
 
@@ -81,6 +121,7 @@ function createNavigationMenu() {
 
 // Build menu
 document.addEventListener('DOMContentLoaded', function () {
+    queryForSections();
     createNavigationMenu();
 });
 
@@ -88,4 +129,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // Set sections as active
 
+document.addEventListener('scroll', function () {
+    activateSection();
+    activateNavigationItem();
+});
 
