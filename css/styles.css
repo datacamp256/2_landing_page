@@ -58,6 +58,7 @@ main {
 section {
     position: relative;
     min-height: 80vh;
+    border-right: 1px solid transparent;
 }
 
 
