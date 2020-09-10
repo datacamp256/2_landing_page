@@ -22,7 +22,6 @@ const NAVBAR_LIST_IDENTIFIER = 'navbar__list';
 const LIST_ITEM_CLASS = 'menu__link';
 const ACTIVE_SECTION_CLASS = 'your-active-class';
 const PAGE_HEADER_CLASS = 'page__header';
-let visibleTop;
 let sections;
 let activeSection;
 
@@ -87,22 +86,20 @@ function createNavigationMenu() {
 // Add class 'active' to section when near top of viewport
 
 function activateSection() {
-    if (parseInt(document.querySelector('main').getBoundingClientRect().top) % 10 === 0) {
-        windowHeight = window.innerHeight !== 0 ? window.innerHeight : document.documentElement.clientHeight;
-        visibleTopEdgeBelow = document.querySelector('.' + PAGE_HEADER_CLASS).offsetHeight;
-        visibleSectionHeaders = [];
+    windowHeight = window.innerHeight !== 0 ? window.innerHeight : document.documentElement.clientHeight;
+    visibleTopEdgeBelow = document.querySelector('.' + PAGE_HEADER_CLASS).offsetHeight;
+    visibleSectionHeaders = [];
 
-        sections.forEach((section) => {
-            if (headerIsVisible(section, windowHeight, visibleTopEdgeBelow)) {//TODO not visible but near top of viewport
-                visibleSectionHeaders.push(section);
-            }
-        });
-
-        if (!visibleSectionHeaders.includes(activeSection) && visibleSectionHeaders.length > 0) {
-            activeSection.classList.remove(ACTIVE_SECTION_CLASS);
-            visibleSectionHeaders[0].classList.add(ACTIVE_SECTION_CLASS);
-            activeSection = visibleSectionHeaders[0];
+    sections.forEach((section) => {
+        if (headerIsVisible(section, windowHeight, visibleTopEdgeBelow)) {//TODO not visible but near top of viewport
+            visibleSectionHeaders.push(section);
         }
+    });
+
+    if (!visibleSectionHeaders.includes(activeSection) && visibleSectionHeaders.length > 0) {
+        activeSection.classList.remove(ACTIVE_SECTION_CLASS);
+        visibleSectionHeaders[0].classList.add(ACTIVE_SECTION_CLASS);
+        activeSection = visibleSectionHeaders[0];
     }
 }
 
@@ -130,7 +127,9 @@ document.addEventListener('DOMContentLoaded', function () {
 // Set sections as active
 
 document.addEventListener('scroll', function () {
-    activateSection();
-    activateNavigationItem();
+    if (parseInt(document.querySelector('main').getBoundingClientRect().top) % 10 === 0) {
+        activateSection();
+        activateNavigationItem();
+    }
 });
 
