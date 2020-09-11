@@ -33,6 +33,11 @@ let activeSection;
  *
  */
 
+
+function determineHeightOfHeader() {
+    return document.querySelector('.' + PAGE_HEADER_CLASS).offsetHeight;
+}
+
 function extractSectionProperties(section) {
     return {
         name: section.getAttribute(NAVIGATION_NAME_ATTRIBUTE),
@@ -40,7 +45,7 @@ function extractSectionProperties(section) {
     };
 }
 
-function findNavigableSections() {
+function filterNavigableSections() {
     const sectionProperties = [];
     allSections.forEach((section) => {
         let sectionProperty = extractSectionProperties(section);
@@ -53,15 +58,36 @@ function findNavigableSections() {
 
 function determineVisibleSectionHeaders() {
     const windowHeight = window.innerHeight !== 0 ? window.innerHeight : document.documentElement.clientHeight;
-    const visibleTopEdgeBelow = document.querySelector('.' + PAGE_HEADER_CLASS).offsetHeight;
+    const visibleTopEdgeBelow = determineHeightOfHeader();
     const visibleSectionHeaders = [];
 
     allSections.forEach((section) => {
-        if (headerIsVisible(section, windowHeight, visibleTopEdgeBelow)) {
+        if (headerIsVisible(section, visibleTopEdgeBelow, windowHeight)) {
             visibleSectionHeaders.push(section);
         }
     });
     return visibleSectionHeaders;
+}
+
+function createNavigationListElement(sectionProperties) {
+    const hyperLink = document.createElement('a');
+    hyperLink.textContent = sectionProperties.name;
+    hyperLink.setAttribute('href', '#' + sectionProperties.target);
+    hyperLink.classList.add(NAVBAR_LINK);
+
+    const listElement = document.createElement('li');
+    listElement.appendChild(hyperLink)
+    listElement.classList.add(LIST_ITEM_CLASS);
+
+    return listElement;
+}
+
+function createNavbarFragment() {
+    const fragment = document.createDocumentFragment();
+    filterNavigableSections().forEach((sectionProperties) => {
+        fragment.appendChild(createNavigationListElement(sectionProperties));
+    });
+    return fragment;
 }
 
 function replaceActiveSection(newActiveSection) {
@@ -70,12 +96,12 @@ function replaceActiveSection(newActiveSection) {
     activeSection = newActiveSection;
 }
 
-function headerIsVisible(section, windowHeight, visibleTopEdgeBelow) {
+function headerIsVisible(section, upperBorder, lowerBorder) {
     let rect = section
         .querySelector('h2')
         .getBoundingClientRect();
-    return (rect.top >= visibleTopEdgeBelow &&
-        rect.bottom <= windowHeight);
+    return (rect.top >= upperBorder &&
+        rect.bottom <= lowerBorder);
 }
 
 /**
@@ -93,24 +119,12 @@ function queryForSections() {
 
 function createNavigationMenu() {
     const navbarList = document.getElementById(NAVBAR_LIST_IDENTIFIER);
-    const fragment = document.createDocumentFragment();
+
     const navbarListStyle = navbarList.style.display;
-    navbarList.style.display = 'none';
+    navbarList.style.display = 'none'; //hide navbarList in browser to reduce number of reflows
 
-    findNavigableSections().forEach((sectionProperties) => {
-        const hyperLink = document.createElement('a');
-        hyperLink.textContent = sectionProperties.name;
-        hyperLink.setAttribute('href', '#' + sectionProperties.target);
-        hyperLink.classList.add(NAVBAR_LINK);
+    navbarList.appendChild(createNavbarFragment());
 
-        const listElement = document.createElement('li');
-        listElement.appendChild(hyperLink)
-        listElement.classList.add(LIST_ITEM_CLASS);
-
-        fragment.appendChild(listElement);
-    });
-
-    navbarList.appendChild(fragment);
     navbarList.style.display = navbarListStyle;
 }
 
@@ -120,16 +134,17 @@ function activateSection() {
 
     const recentActiveSectionIsStillVisible = visibleSectionHeaders.includes(activeSection);
 
-    if (!recentActiveSectionIsStillVisible && visibleSectionHeaders.length > 0) {
+    //recent active section is out of sight and we see the next header
+    if (!recentActiveSectionIsStillVisible && visibleSectionHeaders.length) {
         replaceActiveSection(visibleSectionHeaders[0]);
     }
 }
 
 // Scroll to anchor ID using scrollTO event
-function findScrollTarget(target) {
-    let foundSection = activeSection;
+function findScrollTarget(requestedSectionId) {
+    let foundSection = activeSection; //fallback if no section is found (yes, 'should never occur'...)
     allSections.forEach((section) => {
-        if (section.id === (target)) {
+        if (section.id === (requestedSectionId)) {
             foundSection = section;
         }
     })
@@ -138,8 +153,7 @@ function findScrollTarget(target) {
 
 function scrollToElement(scrollTarget) {
     const rect = scrollTarget.querySelector('h2').getBoundingClientRect();
-    const visibleTopEdgeBelow = document.querySelector('.' + PAGE_HEADER_CLASS).offsetHeight
-    window.scrollBy({top: rect.top - visibleTopEdgeBelow, behavior: 'smooth'});
+    window.scrollBy({top: rect.top - determineHeightOfHeader(), behavior: 'smooth'});
 }
 
 /**
