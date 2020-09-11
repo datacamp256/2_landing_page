@@ -86,9 +86,9 @@ function createNavigationMenu() {
 // Add class 'active' to section when near top of viewport
 
 function activateSection() {
-    windowHeight = window.innerHeight !== 0 ? window.innerHeight : document.documentElement.clientHeight;
-    visibleTopEdgeBelow = document.querySelector('.' + PAGE_HEADER_CLASS).offsetHeight;
-    visibleSectionHeaders = [];
+    const windowHeight = window.innerHeight !== 0 ? window.innerHeight : document.documentElement.clientHeight;
+    const visibleTopEdgeBelow = document.querySelector('.' + PAGE_HEADER_CLASS).offsetHeight;
+    const visibleSectionHeaders = [];
 
     sections.forEach((section) => {
         if (headerIsVisible(section, windowHeight, visibleTopEdgeBelow)) {
@@ -96,10 +96,12 @@ function activateSection() {
         }
     });
 
-    if (!visibleSectionHeaders.includes(activeSection) && visibleSectionHeaders.length > 0) {
+    const recentActiveSectionStillVisible = visibleSectionHeaders.includes(activeSection);
+    if (!recentActiveSectionStillVisible && visibleSectionHeaders.length > 0) {
+        let firstVisibleSection = visibleSectionHeaders[0];
         activeSection.classList.remove(ACTIVE_SECTION_CLASS);
-        visibleSectionHeaders[0].classList.add(ACTIVE_SECTION_CLASS);
-        activeSection = visibleSectionHeaders[0];
+        firstVisibleSection.classList.add(ACTIVE_SECTION_CLASS);
+        activeSection = firstVisibleSection;
     }
 }
 
@@ -117,6 +119,8 @@ function activateNavigationItem() {
  */
 
 // Build menu
+
+//as soon as page is complete in DOM
 document.addEventListener('DOMContentLoaded', function () {
     queryForSections();
     createNavigationMenu();
@@ -127,6 +131,7 @@ document.addEventListener('DOMContentLoaded', function () {
 // Set sections as active
 
 document.addEventListener('scroll', function () {
+    //performance: get active only sometimes
     if (parseInt(document.querySelector('main').getBoundingClientRect().top) % 10 === 0) {
         activateSection();
         activateNavigationItem();
