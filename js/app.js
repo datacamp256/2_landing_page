@@ -23,7 +23,8 @@ const LIST_ITEM_CLASS = 'menu__link';
 const NAVBAR_LINK = 'menu__link-anchor'
 const ACTIVE_SECTION_CLASS = 'your-active-class';
 const PAGE_HEADER_CLASS = 'page__header';
-let sections;
+
+let allSections;
 let activeSection;
 
 /**
@@ -32,22 +33,41 @@ let activeSection;
  *
  */
 
-function extractEntryValues(entry) {
+function extractSectionProperties(section) {
     return {
-        name: entry.getAttribute(NAVIGATION_NAME_ATTRIBUTE),
-        target: entry.id
+        name: section.getAttribute(NAVIGATION_NAME_ATTRIBUTE),
+        target: section.id
     };
 }
 
-function findSections() {
+function findNavigableSections() {
     const sectionProperties = [];
-    sections.forEach((entry) => {
-        let entryValues = extractEntryValues(entry);
-        if (entryValues.name != null) {
-            sectionProperties.push(entryValues);
+    allSections.forEach((section) => {
+        let sectionProperty = extractSectionProperties(section);
+        if (sectionProperty.name != null) {
+            sectionProperties.push(sectionProperty);
         }
     })
     return sectionProperties;
+}
+
+function determineVisibleSectionHeaders() {
+    const windowHeight = window.innerHeight !== 0 ? window.innerHeight : document.documentElement.clientHeight;
+    const visibleTopEdgeBelow = document.querySelector('.' + PAGE_HEADER_CLASS).offsetHeight;
+    const visibleSectionHeaders = [];
+
+    allSections.forEach((section) => {
+        if (headerIsVisible(section, windowHeight, visibleTopEdgeBelow)) {
+            visibleSectionHeaders.push(section);
+        }
+    });
+    return visibleSectionHeaders;
+}
+
+function replaceActiveSection(newActiveSection) {
+    activeSection.classList.remove(ACTIVE_SECTION_CLASS);
+    newActiveSection.classList.add(ACTIVE_SECTION_CLASS);
+    activeSection = newActiveSection;
 }
 
 function headerIsVisible(section, windowHeight, visibleTopEdgeBelow) {
@@ -67,55 +87,48 @@ function headerIsVisible(section, windowHeight, visibleTopEdgeBelow) {
 // build the nav
 
 function queryForSections() {
-    sections = document.querySelectorAll('main section');
+    allSections = document.querySelectorAll('main section');
     activeSection = document.querySelector('.' + ACTIVE_SECTION_CLASS);
 }
 
 function createNavigationMenu() {
     const navbarList = document.getElementById(NAVBAR_LIST_IDENTIFIER);
-    findSections().forEach((entry) => {
+    const fragment = document.createDocumentFragment();
+    const navbarListStyle = navbarList.style.display;
+    navbarList.style.display = 'none';
+
+    findNavigableSections().forEach((sectionProperties) => {
         const hyperLink = document.createElement('a');
-        hyperLink.textContent = entry.name;
-        hyperLink.setAttribute('href', '#' + entry.target);
+        hyperLink.textContent = sectionProperties.name;
+        hyperLink.setAttribute('href', '#' + sectionProperties.target);
         hyperLink.classList.add(NAVBAR_LINK);
+
         const listElement = document.createElement('li');
         listElement.appendChild(hyperLink)
         listElement.classList.add(LIST_ITEM_CLASS);
-        navbarList.appendChild(listElement);
+
+        fragment.appendChild(listElement);
     });
+
+    navbarList.appendChild(fragment);
+    navbarList.style.display = navbarListStyle;
 }
 
 // Add class 'active' to section when near top of viewport
-
 function activateSection() {
-    const windowHeight = window.innerHeight !== 0 ? window.innerHeight : document.documentElement.clientHeight;
-    const visibleTopEdgeBelow = document.querySelector('.' + PAGE_HEADER_CLASS).offsetHeight;
-    const visibleSectionHeaders = [];
+    const visibleSectionHeaders = determineVisibleSectionHeaders();
 
-    sections.forEach((section) => {
-        if (headerIsVisible(section, windowHeight, visibleTopEdgeBelow)) {
-            visibleSectionHeaders.push(section);
-        }
-    });
+    const recentActiveSectionIsStillVisible = visibleSectionHeaders.includes(activeSection);
 
-    const recentActiveSectionStillVisible = visibleSectionHeaders.includes(activeSection);
-    if (!recentActiveSectionStillVisible && visibleSectionHeaders.length > 0) {
-        let firstVisibleSection = visibleSectionHeaders[0];
-        activeSection.classList.remove(ACTIVE_SECTION_CLASS);
-        firstVisibleSection.classList.add(ACTIVE_SECTION_CLASS);
-        activeSection = firstVisibleSection;
+    if (!recentActiveSectionIsStillVisible && visibleSectionHeaders.length > 0) {
+        replaceActiveSection(visibleSectionHeaders[0]);
     }
 }
 
-function activateNavigationItem() {
-
-}
-
 // Scroll to anchor ID using scrollTO event
-
 function findScrollTarget(target) {
     let foundSection = activeSection;
-    sections.forEach((section) => {
+    allSections.forEach((section) => {
         if (section.id === (target)) {
             foundSection = section;
         }
@@ -154,12 +167,10 @@ document.addEventListener('click', function (event) {
 });
 
 // Set sections as active
-
 document.addEventListener('scroll', function () {
     //performance: get active only sometimes
     if (parseInt(document.querySelector('main').getBoundingClientRect().top) % 10 === 0) {
         activateSection();
-        activateNavigationItem();
     }
 });
 
