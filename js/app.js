@@ -50,7 +50,7 @@ function findSections() {
 }
 
 function headerIsVisible(section, windowHeight, visibleTopEdgeBelow) {
-    var rect = section
+    let rect = section
         .querySelector('h2')
         .getBoundingClientRect();
     return (rect.top >= visibleTopEdgeBelow &&
@@ -91,7 +91,7 @@ function activateSection() {
     visibleSectionHeaders = [];
 
     sections.forEach((section) => {
-        if (headerIsVisible(section, windowHeight, visibleTopEdgeBelow)) {//TODO not visible but near top of viewport
+        if (headerIsVisible(section, windowHeight, visibleTopEdgeBelow)) {
             visibleSectionHeaders.push(section);
         }
     });
