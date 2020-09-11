@@ -53,7 +53,7 @@ describe('Navigation Bar', () => {
 
         const navbarList = document.getElementById('navbar__list');
         expect(navbarList.children).toHaveLength(3);
-        expectedListItems = [
+        const expectedListItems = [
             {name: '::data-nav 1::', href: '#test-anchor1'},
             {name: '::data-nav 2::', href: '#test-anchor2'},
             {name: '::data-nav 3::', href: '#test-anchor3'},

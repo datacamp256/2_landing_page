@@ -13,7 +13,7 @@ You have to follow some rules to create content which will be added to the navig
 
 ### Where to ad content
 If you want to add your own content, open [index.html](index.html).
-You can add your own content between the two lines
+You can add your own content between the two lines.
 
 `<!-- OWN CONTENT MUST BE ADDED BELOW THIS LINE -->`
 
@@ -21,7 +21,7 @@ and
 
 `<!-- OWN CONTENT MUST BE ADDED ABOVE THIS LINE -->`
 
-Be careful that you write your own content only at the beginning or end of the described area or between two lines of `</section>` (below this) and `<section>` (above this)!
+Be careful you write your own content only at the beginning or end of the described area or between two lines of `</section>` (below this) and `<section>` (above this)!
 
 ### How to add content
 You add content in separate _sections_.
