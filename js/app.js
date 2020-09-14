@@ -22,10 +22,13 @@ const NAVBAR_LIST_IDENTIFIER = 'navbar__list';
 const LIST_ITEM_CLASS = 'menu__link';
 const NAVBAR_LINK = 'menu__link-anchor'
 const ACTIVE_SECTION_CLASS = 'your-active-class';
+const ACTIVE_NAVBAR_ELEMENT_CLASS = 'navbar__listelement-active';
 const PAGE_HEADER_CLASS = 'page__header';
 
 let allSections;
 let activeSection;
+const allNavigationItems = new Map();
+let activeNavigationItem;
 
 /**
  * End Global Variables
@@ -85,7 +88,9 @@ function createNavigationListElement(sectionProperties) {
 function createNavbarFragment() {
     const fragment = document.createDocumentFragment();
     filterNavigableSections().forEach((sectionProperties) => {
-        fragment.appendChild(createNavigationListElement(sectionProperties));
+        const navigationListElement = createNavigationListElement(sectionProperties);
+        fragment.appendChild(navigationListElement);
+        allNavigationItems.set(sectionProperties.target, navigationListElement);
     });
     return fragment;
 }
@@ -137,6 +142,20 @@ function activateSection() {
     //recent active section is out of sight and we see the next header
     if (!recentActiveSectionIsStillVisible && visibleSectionHeaders.length) {
         replaceActiveSection(visibleSectionHeaders[0]);
+        return true;
+    }
+    return false;
+}
+
+function activateNavigationItem(switchActiveNavigationItem) {
+    if(switchActiveNavigationItem) {
+        if (activeNavigationItem) {
+            console.log(`remove from ${activeNavigationItem.innerHTML}`);
+            activeNavigationItem.classList.remove(ACTIVE_NAVBAR_ELEMENT_CLASS);
+        }
+        activeNavigationItem = allNavigationItems.get(activeSection.id);
+        console.log(`new active: ${activeNavigationItem.innerHTML}`);
+        activeNavigationItem.classList.add(ACTIVE_NAVBAR_ELEMENT_CLASS);
     }
 }
 
@@ -168,6 +187,8 @@ function scrollToElement(scrollTarget) {
 document.addEventListener('DOMContentLoaded', function () {
     queryForSections();
     createNavigationMenu();
+    activateSection(); //if the browser is reloaded somewhere in the middle or an anchor is in the URI
+    activateNavigationItem(true);
 });
 
 // Scroll to section on link click
@@ -184,7 +205,9 @@ document.addEventListener('click', function (event) {
 document.addEventListener('scroll', function () {
     //performance: get active only sometimes
     if (parseInt(document.querySelector('main').getBoundingClientRect().top) % 10 === 0) {
-        activateSection();
+        const activeSectionChanged = activateSection();
+        activateNavigationItem(activeSectionChanged);
+
     }
 });
 
