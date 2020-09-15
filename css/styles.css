@@ -45,6 +45,11 @@ p {
     color: #eee;
 }
 
+a, a:link, a:visited, a:focus, a:hover, a:active {
+    color: rgba(0, 13, 60, 1);
+    text-decoration: none;
+}
+
 /* ---- Layout Rules ---- */
 main {
     margin: 10vh 1em 10vh;
@@ -70,6 +75,8 @@ section {
     background: #cc1;
     font-family: 'Oxygen', Sans-Serif;
     text-align: right;
+    font-weight: bold;
+    text-decoration: none;
 }
 
 .navbar__menu ul {
@@ -78,8 +85,8 @@ section {
     text-align: right;
 }
 
-#navbar__toggle {
-
+#section__preview {
+    padding: 1em;
 }
 
 #navbar__list {
@@ -90,8 +97,10 @@ section {
     display: inline-block;
 }
 
-.navbar__listelement-active{
+.navbar__listelement-active {
     padding-right: 1em;
+    color: #fff;
+    background: rgba(136, 203, 171, 1) 0%;
 }
 
 .navbar__menu .menu__link {

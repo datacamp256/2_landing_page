@@ -22,6 +22,7 @@ const NAVBAR_LIST_IDENTIFIER = 'navbar__list';
 const LIST_ITEM_CLASS = 'menu__link';
 const NAVBAR_LINK = 'menu__link-anchor'
 const ACTIVE_SECTION_CLASS = 'your-active-class';
+const SECTION_PREVIEW_ID = '#section__preview';
 const ACTIVE_NAVBAR_ELEMENT_CLASS = 'navbar__listelement-active';
 const PAGE_HEADER_CLASS = 'page__header';
 
@@ -147,15 +148,15 @@ function activateSection() {
     return false;
 }
 
-function activateNavigationItem(switchActiveNavigationItem) {
+function updateNavigationBar(switchActiveNavigationItem) {
     if(switchActiveNavigationItem) {
         if (activeNavigationItem) {
-            console.log(`remove from ${activeNavigationItem.innerHTML}`);
             activeNavigationItem.classList.remove(ACTIVE_NAVBAR_ELEMENT_CLASS);
         }
         activeNavigationItem = allNavigationItems.get(activeSection.id);
-        console.log(`new active: ${activeNavigationItem.innerHTML}`);
         activeNavigationItem.classList.add(ACTIVE_NAVBAR_ELEMENT_CLASS);
+
+        document.querySelector(SECTION_PREVIEW_ID).innerHTML = activeSection.getAttribute(NAVIGATION_NAME_ATTRIBUTE);
     }
 }
 
@@ -188,7 +189,7 @@ document.addEventListener('DOMContentLoaded', function () {
     queryForSections();
     createNavigationMenu();
     activateSection(); //if the browser is reloaded somewhere in the middle or an anchor is in the URI
-    activateNavigationItem(true);
+    updateNavigationBar(true);
 });
 
 function openNavbar() {
@@ -215,7 +216,7 @@ document.addEventListener('scroll', function () {
     //performance: get active only sometimes
     if (parseInt(document.querySelector('main').getBoundingClientRect().top) % 10 === 0) {
         const activeSectionChanged = activateSection();
-        activateNavigationItem(activeSectionChanged);
+        updateNavigationBar(activeSectionChanged);
 
     }
 });
