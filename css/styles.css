@@ -65,14 +65,33 @@ section {
 /* ---- Module Rules ---- */
 
 /* Navigation Styles*/
+
+.navbar__menu {
+    background: #cc1;
+    font-family: 'Oxygen', Sans-Serif;
+    text-align: right;
+}
+
 .navbar__menu ul {
     padding-left: 0;
     margin: 0;
     text-align: right;
 }
 
+#navbar__toggle {
+
+}
+
+#navbar__list {
+    display: none;
+}
+
 .navbar__menu li {
     display: inline-block;
+}
+
+.navbar__listelement-active{
+    padding-right: 1em;
 }
 
 .navbar__menu .menu__link {

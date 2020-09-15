@@ -191,6 +191,15 @@ document.addEventListener('DOMContentLoaded', function () {
     activateNavigationItem(true);
 });
 
+function openNavbar() {
+    var x = document.getElementById("navbar__list");
+    if (x.style.display === "block") {
+        x.style.display = "none";
+    } else {
+        x.style.display = "block";
+    }
+}
+
 // Scroll to section on link click
 document.addEventListener('click', function (event) {
     let element = event.target;
